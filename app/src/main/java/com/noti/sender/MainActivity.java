@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     if (isNewInstall) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(context);
                         alert
+                                .setCancelable(false)
                                 .setTitle(context.getString(R.string.dialog_download_title))
                                 .setMessage(context.getString(R.string.dialog_download_message))
                                 .setNegativeButton("Cancel",(d,w) -> context.finish())
@@ -195,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                         if (v1.compareTo(v2) > 0) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert
+                                    .setCancelable(false)
                                     .setTitle(context.getString(R.string.dialog_update_title))
                                     .setMessage(context.getString(R.string.dialog_update_message))
                                     .setNegativeButton("Cancel",(d,w) -> context.finish())
