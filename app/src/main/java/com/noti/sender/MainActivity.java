@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (int i : grantResults) {
-            if (i == PackageManager.PERMISSION_DENIED) finish();
+            if (i == PackageManager.PERMISSION_DENIED) ExitActivity.exitApplication(this);
         }
         if (Build.VERSION.SDK_INT >= 26 && !this.getPackageManager().canRequestPackageInstalls()) {
             this.startActivityForResult(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).setData(Uri.parse("package:" + this.getPackageName())), 2);
@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1234 && isMainAppInstalled(getApplicationContext())) {
             startMainActivity(getApplicationContext());
-        } else finish();
+        } else ExitActivity.exitApplication(this);
 
         if (requestCode == 2) {
             if (Build.VERSION.SDK_INT < 26 || resultCode != Activity.RESULT_OK) {
-                this.finish();
+                ExitActivity.exitApplication(this);
             } else init();
         }
     }
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setCancelable(false)
                                 .setTitle(context.getString(R.string.dialog_download_title))
                                 .setMessage(context.getString(R.string.dialog_download_message))
-                                .setNegativeButton("Cancel",(d,w) -> context.finish())
+                                .setNegativeButton("Cancel",(d,w) -> ExitActivity.exitApplication(context))
                                 .setPositiveButton("Download",(d,w) -> {
                             ((TextView) context.findViewById(R.id.status1)).setText(context.getString(R.string.main_download));
                             new DownloadTask(context, progressBar).execute("https://github.com/choiman1559/NotiSender/releases/download/" + latestVersion + "/app-release.apk");
@@ -199,14 +199,14 @@ public class MainActivity extends AppCompatActivity {
                                     .setCancelable(false)
                                     .setTitle(context.getString(R.string.dialog_update_title))
                                     .setMessage(context.getString(R.string.dialog_update_message))
-                                    .setNegativeButton("Cancel",(d,w) -> context.finish())
+                                    .setNegativeButton("Cancel",(d,w) -> ExitActivity.exitApplication(context))
                                     .setPositiveButton("Update",(d,w) -> {
                                         ((TextView) context.findViewById(R.id.status1)).setText(context.getString(R.string.main_updating));
                                         new DownloadTask(context, progressBar).execute("https://github.com/choiman1559/NotiSender/releases/download/" + latestVersion + "/app-release.apk");
                                     }).show();
                         } else {
                             startMainActivity(context);
-                            context.finish();
+                            ExitActivity.exitApplication(context);
                         }
                     }
                 } catch (JSONException | PackageManager.NameNotFoundException ex) {
