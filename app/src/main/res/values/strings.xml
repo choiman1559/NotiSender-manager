@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Noti Sender</string>
+    <string name="main_loading">Loading… Please wait</string>
+    <string name="main_checkupdate">Checking update…</string>
+    <string name="main_updating">Updating apk…</string>
+    <string name="main_download">Downloading apk…</string>
+    <string name="main_install">Installing apk…</string>
+    <string name="dialog_download_title">Confirm</string>
+    <string name="dialog_download_message">Since some APIs required by the app are prohibited by the policy of Google Play, the apk of the main app is downloaded from Github. Would you like to download it?</string>
+    <string name="dialog_update_title">Update exists</string>
+    <string name="dialog_update_message">An update exists. Do you want to update?</string>
+</resources>
