@@ -19,6 +19,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+import br.tiagohm.markdownview.MarkdownView;
+import br.tiagohm.markdownview.css.styles.Github;
+
 @SuppressLint("StaticFieldLeak")
 public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
     Activity context;
@@ -69,15 +72,14 @@ public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
                 JSONObject obj = response.getJSONObject(0);
                 String latestVersion = obj.getString("tag_name");
                 if (isNewInstall) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                    alert
+                    new AlertDialog.Builder(context)
                             .setCancelable(false)
                             .setTitle(context.getString(R.string.dialog_download_title))
                             .setMessage(context.getString(R.string.dialog_download_message))
                             .setNegativeButton("Cancel",(d,w) -> ExitActivity.exitApplication(context))
                             .setPositiveButton("Download",(d,w) -> {
                                 ((TextView) context.findViewById(R.id.status1)).setText(context.getString(R.string.main_download));
-                                new DownloadTask(context, progressBar).execute("https://github.com/choiman1559/NotiSender/releases/download/" + latestVersion + "/app-release.apk");
+                                new DownloadTask(context, progressBar).execute(latestVersion);
                             }).show();
                 } else {
                     PackageManager pm = context.getPackageManager();
@@ -86,16 +88,21 @@ public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
                     Version v2 = new Version(localVersion);
 
                     if (v1.compareTo(v2) > 0) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                        alert
+                        MarkdownView md = new MarkdownView(context);
+                        md.addStyleSheet(new Github());
+                        md.setEscapeHtml(false);
+                        md.loadMarkdown("### Version : " + latestVersion + "\r\n" + obj.getString("body"));
+
+                        new AlertDialog.Builder(context)
                                 .setCancelable(false)
                                 .setTitle(context.getString(R.string.dialog_update_title))
                                 .setMessage(context.getString(R.string.dialog_update_message))
                                 .setNegativeButton("Cancel",(d,w) -> ExitActivity.exitApplication(context))
+                                .setNeutralButton("NO THANKS",(d,w) -> MainActivity.startMainActivity(context))
                                 .setPositiveButton("Update",(d,w) -> {
                                     ((TextView) context.findViewById(R.id.status1)).setText(context.getString(R.string.main_updating));
-                                    new DownloadTask(context, progressBar).execute("https://github.com/choiman1559/NotiSender/releases/download/" + latestVersion + "/app-release.apk");
-                                }).show();
+                                    new DownloadTask(context, progressBar).execute(latestVersion);
+                                }).setView(md).show();
                     } else {
                         MainActivity.startMainActivity(context);
                         ExitActivity.exitApplication(context);

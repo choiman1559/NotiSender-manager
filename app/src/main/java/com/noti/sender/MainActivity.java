@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1234 && isMainAppInstalled(getApplicationContext())) {
-            startMainActivity(getApplicationContext());
-        } else ExitActivity.exitApplication(this);
+        if (requestCode == 1234) {
+            ExitActivity.exitApplication(this);
+        }
 
         if (requestCode == 2) {
             if (Build.VERSION.SDK_INT < 26 || resultCode != Activity.RESULT_OK) {

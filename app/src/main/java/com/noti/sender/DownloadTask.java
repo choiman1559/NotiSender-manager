@@ -2,6 +2,8 @@ package com.noti.sender;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,9 +28,10 @@ import java.net.URL;
 @SuppressLint("StaticFieldLeak")
 public class DownloadTask extends AsyncTask<String, Integer, String> {
 
-    public Activity context;
-    public ProgressBar progressBar;
-    public PowerManager.WakeLock mWakeLock;
+    private final Activity context;
+    private final ProgressBar progressBar;
+    private PowerManager.WakeLock mWakeLock;
+    private String latestVersion;
 
     public DownloadTask(Activity context,ProgressBar progressBar) {
         this.context = context;
@@ -60,10 +63,16 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
     protected void onPostExecute(String result) {
         mWakeLock.release();
         progressBar.setProgress(100);
-        if (result != null) Toast.makeText(context,"Download error: "+result, Toast.LENGTH_LONG).show();
-        else {
+        File apk = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/NotiSender" + latestVersion + "_release.apk");
+        if (result != null) {
+            if(apk.exists()) apk.delete();
+            new AlertDialog.Builder(context)
+                    .setTitle("Error!")
+                    .setMessage("Error occurred while downloading : " + result)
+                    .setPositiveButton("Close",(d,w) -> ExitActivity.exitApplication(context))
+                    .show();
+        } else {
             ((TextView)context.findViewById(R.id.status1)).setText(context.getString(R.string.main_install));
-            File apk = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/NotiSender_release.apk");
             Intent intent = new Intent(Intent.ACTION_VIEW);
             Uri uri = Build.VERSION.SDK_INT <= 23 ? Uri.fromFile(apk) : FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", apk);
             if (Build.VERSION.SDK_INT <= 23) {
@@ -82,7 +91,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         OutputStream output = null;
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(sUrl[0]);
+            latestVersion = sUrl[0];
+            URL url = new URL("https://github.com/choiman1559/NotiSender/releases/download/" + latestVersion + "/app-release.apk");
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -91,7 +101,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
 
             int fileLength = connection.getContentLength();
             input = connection.getInputStream();
-            output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/Download/NotiSender_release.apk");
+            output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/Download/NotiSender" + latestVersion + "_release.apk");
 
             byte[] data = new byte[4096];
             long total = 0;
