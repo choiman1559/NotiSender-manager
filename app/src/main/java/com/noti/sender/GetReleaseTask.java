@@ -98,7 +98,10 @@ public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
                                 .setTitle(context.getString(R.string.dialog_update_title))
                                 .setMessage(context.getString(R.string.dialog_update_message))
                                 .setNegativeButton("Cancel",(d,w) -> ExitActivity.exitApplication(context))
-                                .setNeutralButton("NO THANKS",(d,w) -> MainActivity.startMainActivity(context))
+                                .setNeutralButton("NO THANKS",(d,w) -> {
+                                    MainActivity.startMainActivity(context);
+                                    ExitActivity.exitApplication(context);
+                                })
                                 .setPositiveButton("Update",(d,w) -> {
                                     ((TextView) context.findViewById(R.id.status1)).setText(context.getString(R.string.main_updating));
                                     new DownloadTask(context, progressBar).execute(latestVersion);

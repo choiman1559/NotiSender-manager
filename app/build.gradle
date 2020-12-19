@@ -11,8 +11,8 @@ android {
         applicationId "com.noti.sender"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1010503
-        versionName "1.5.3"
+        versionCode 1010504
+        versionName "1.5.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
