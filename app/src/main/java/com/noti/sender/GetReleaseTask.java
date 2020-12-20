@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,8 +19,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import br.tiagohm.markdownview.MarkdownView;
-import br.tiagohm.markdownview.css.styles.Github;
+import us.feras.mdv.MarkdownView;
 
 @SuppressLint("StaticFieldLeak")
 public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
@@ -89,11 +87,8 @@ public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
                     Version v2 = new Version(localVersion);
 
                     if (v1.compareTo(v2) > 0) {
-                        //View Layout = context.getLayoutInflater().inflate(R.layout.dialog_updatelog, null);
-                        MarkdownView md = new MarkdownView(context);//Layout.findViewById(R.id.mdView);
-                        md.addStyleSheet(new Github());
-                        md.setEscapeHtml(false);
-                        md.loadMarkdown("### Version : " + latestVersion + "\r\n" + obj.getString("body"));
+                        MarkdownView md = new MarkdownView(context);
+                        md.loadMarkdown("##### Version : " + latestVersion + "\r\n" + obj.getString("body"));
 
                         new AlertDialog.Builder(context)
                                 .setCancelable(false)
@@ -107,7 +102,7 @@ public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
                                 .setPositiveButton("Update",(d,w) -> {
                                     ((TextView) context.findViewById(R.id.status1)).setText(context.getString(R.string.main_updating));
                                     new DownloadTask(context, progressBar).execute(latestVersion);
-                                }).setView(md/*Layout*/).show();
+                                }).setView(md).show();
                     } else {
                         MainActivity.startMainActivity(context);
                         ExitActivity.exitApplication(context);
