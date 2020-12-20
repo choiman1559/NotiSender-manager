@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -88,7 +89,8 @@ public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
                     Version v2 = new Version(localVersion);
 
                     if (v1.compareTo(v2) > 0) {
-                        MarkdownView md = new MarkdownView(context);
+                        //View Layout = context.getLayoutInflater().inflate(R.layout.dialog_updatelog, null);
+                        MarkdownView md = new MarkdownView(context);//Layout.findViewById(R.id.mdView);
                         md.addStyleSheet(new Github());
                         md.setEscapeHtml(false);
                         md.loadMarkdown("### Version : " + latestVersion + "\r\n" + obj.getString("body"));
@@ -105,7 +107,7 @@ public class GetReleaseTask extends AsyncTask<Void, Void, JSONArray> {
                                 .setPositiveButton("Update",(d,w) -> {
                                     ((TextView) context.findViewById(R.id.status1)).setText(context.getString(R.string.main_updating));
                                     new DownloadTask(context, progressBar).execute(latestVersion);
-                                }).setView(md).show();
+                                }).setView(md/*Layout*/).show();
                     } else {
                         MainActivity.startMainActivity(context);
                         ExitActivity.exitApplication(context);

@@ -9,4 +9,8 @@
     <string name="dialog_download_message">Since some APIs required by the app are prohibited by the policy of Google Play, the apk of the main app is downloaded from Github. Would you like to download it?</string>
     <string name="dialog_update_title">Update exists</string>
     <string name="dialog_update_message">An update exists. Do you want to update?</string>
+
+    <string name="dialog_no">No thanks</string>
+    <string name="dialog_yes">Update</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>
